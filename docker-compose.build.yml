@@ -1,0 +1,16 @@
+# nodejsビルド
+# sudo docker-compose -f docker-compose.build.yml up
+# sudo docker-compose -f docker-compose.build.yml down -v
+version: '3'
+services:
+
+  c_build_nodejs:
+    build: ./c_build/nodejs
+    container_name: c_build_nodejs
+    command: [sh, -c, cd /src/front && npm i && npm run build && cd /src/server && npm i && npm run build]
+    volumes:
+      - ./c_nodejs/file:/src
+    env_file:
+      - .env
+    tty: true
+    restart: always

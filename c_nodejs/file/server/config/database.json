@@ -1,0 +1,6 @@
+{
+  "mongodb": {
+    "development": "",
+    "production": "mongodb://c_mongodb:27017/code"
+  }
+}

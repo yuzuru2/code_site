@@ -1,0 +1,45 @@
+version: '3'
+services:
+
+  # フロントエンドサーバ
+  c_nginx:
+    build: ./c_nginx
+    container_name: c_nginx
+    ports:
+      - "${NGINX_PORT}:8080"
+    volumes:
+      - ./c_nodejs/file/front/dist:/usr/share/nginx/html
+    environment:
+      - TZ=Asia/Tokyo
+    tty: true
+    restart: always
+  
+  # mongodb
+  c_mongodb:
+    build: ./c_mongodb
+    container_name: c_mongodb
+    volumes:
+      - ./c_mongodb/data:/data/db
+      - ./c_mongodb/mongod.conf:/etc/mongod.conf
+      - ./c_mongodb/init/:/docker-entrypoint-initdb.d/
+    command: mongod --config /etc/mongod.conf
+    tty: true
+    restart: always
+
+  # バックエンドサーバ
+  c_nodejs:
+    build: ./c_nodejs
+    container_name: c_nodejs
+    ports:
+      - "${BACKEND_PORT}:3000"
+    command: [sh, -c, /wait && cd /src/server && npm run pro]
+    depends_on:
+      - c_mongodb
+    environment:
+      WAIT_HOSTS: c_mongodb:27017
+    volumes:
+      - ./c_nodejs/file:/src
+    env_file:
+      - .env
+    tty: true
+    restart: always
