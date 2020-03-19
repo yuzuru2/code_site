@@ -2,7 +2,7 @@ export const constant = {
   // Bearer key
   AUTHORIZATION_KEY: 'Bearer abc',
 
-  // オリジン
+  // リクエストURL
   URL: {
     development: ``,
     production: `http://${process.env.SERVER_IP}:${process.env.BACKEND_PORT}/api/v1`
